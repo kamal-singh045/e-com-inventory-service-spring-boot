@@ -1,0 +1,42 @@
+services:
+  inventory_mongo:
+    image: mongo:8.2.1
+    container_name: inventory-mongo
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=inventory_db
+    volumes:
+      - inventory_service_data:/var/lib/mongo/data
+    networks:
+      - e_com_network
+
+  inventory_service:
+    container_name: inventory-service
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./:/workspace
+      - ~/.m2:/root/.m2
+    working_dir: /workspace
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DATA_MONGODB_URI=mongodb://root:secret@inventory-mongo:27017/inventory_db?authSource=admin
+    command: ["./mvnw", "spring-boot:run", "-Dspring-boot.run.fork=false"]
+    depends_on:
+      - inventory_mongo
+    networks:
+      - e_com_network
+
+networks:
+  e_com_network:
+    external: true
+
+volumes:
+  inventory_service_data:

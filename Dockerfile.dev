@@ -1,0 +1,15 @@
+FROM maven:3.9.4-eclipse-temurin-17
+WORKDIR /workspace
+
+# copy only maven wrapper + pom to populate dependencies cache
+COPY mvnw ./
+COPY .mvn .mvn
+COPY pom.xml ./
+RUN chmod +x mvnw && ./mvnw -q -DskipTests dependency:go-offline
+
+# ✅ Copy your entire source code (main + test)
+COPY src ./src
+
+# mount full project (from docker-compose.dev.yml) so edits on host are visible
+EXPOSE 8082
+CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.fork=false"]
