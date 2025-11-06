@@ -2,10 +2,6 @@ package com.ecomapp.inventory_service.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +38,16 @@ public class FileUploadService {
     }
     // Save files to disk
     for(MultipartFile file : body.getFiles()) {
-      String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename().replace(" .,", "_");
+      String originalFileName = file.getOriginalFilename();
+      String baseName = originalFileName;
+      String extension = "";
+      int lastDotIndex = originalFileName.lastIndexOf('.');
+      if(lastDotIndex > 0 && lastDotIndex < originalFileName.length() - 1) {
+        baseName = originalFileName.substring(0, lastDotIndex);
+        extension = originalFileName.substring(lastDotIndex);
+      }
+      String sanitizedBaseName = baseName.replaceAll("\\W", "_");
+      String fileName = System.currentTimeMillis() + "_" + sanitizedBaseName + extension;
       File destinationFile = new File(uploadDir + fileName);
       file.transferTo(destinationFile);
       // Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);

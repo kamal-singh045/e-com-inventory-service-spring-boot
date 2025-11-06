@@ -33,7 +33,7 @@ public class ProductService {
     product.setMrp(body.getMrp());
     product.setDiscount(body.getDiscount());
     product.setQuantity(body.getQuantity());
-    product.setAvailableStock(body.getQuantity());
+    product.setAvailableStock(body.getAvailableStock());
     product.setUnit(body.getUnit());
     product.setCategoryId(body.getCategoryId());
     product.setImageUrls(new ArrayList<>());
