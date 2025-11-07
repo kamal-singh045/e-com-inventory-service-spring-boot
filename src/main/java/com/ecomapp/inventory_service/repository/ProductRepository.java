@@ -7,5 +7,4 @@ import com.ecomapp.inventory_service.model.ProductModel;
 
 @Repository
 public interface ProductRepository extends MongoRepository<ProductModel, String> {
-  
 }
