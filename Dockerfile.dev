@@ -7,9 +7,12 @@ COPY .mvn .mvn
 COPY pom.xml ./
 RUN chmod +x mvnw && ./mvnw -q -DskipTests dependency:go-offline
 
-# ✅ Copy your entire source code (main + test)
+# Copy proto files first to generate gRPC classes
+COPY src/main/proto ./src/main/proto
+
+# Copy your entire source code (main + test)
 COPY src ./src
 
 # mount full project (from docker-compose.dev.yml) so edits on host are visible
-EXPOSE 8082
+EXPOSE 8082 50051
 CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.fork=false"]

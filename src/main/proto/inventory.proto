@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package inventory;
+
+option java_package = "com.ecomapp.inventory_service.grpc";
+option java_outer_classname = "InventoryProto";
+option java_multiple_files = true;
+
+service InventoryService {
+  rpc GetUserCart (GetUserCartRequest) returns (GetUserCartResponse);
+  rpc ClearUserCart (ClearUserCartRequest) returns (ClearUserCartResponse);
+}
+
+message GetUserCartRequest {
+  string userId = 1;
+}
+
+message CartProduct {
+  string id = 1;
+  string categoryId = 2;
+  string name = 3;
+  string description = 4;
+  repeated string imageUrls = 5;
+  bool isActive = 6;
+  float mrp = 7;
+  float discount = 8;
+  float quantity = 9;
+  float availableStock = 10;
+  string unit = 11;
+}
+
+message CartItemResponse {
+  string id = 1;
+  int32 itemCount = 2;
+  CartProduct product = 3;
+}
+
+message GetUserCartResponse {
+  float totalMrp = 1;
+  float totalPrice = 2;
+  repeated CartItemResponse items = 3;
+}
+
+message ClearUserCartRequest {
+  string userId = 1;
+}
+
+message ClearUserCartResponse {
+  bool success = 1;
+  string message = 2;
+}

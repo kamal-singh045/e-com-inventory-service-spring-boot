@@ -193,4 +193,23 @@ public class CartService {
 
     return new ApiResponse<>(true, "Cart retrieved successfully", result);
   }
+
+  @Transactional
+  public ApiResponse<String> clearCart(String userId) {
+    // Validate input
+    if (userId == null || userId.isEmpty()) {
+      throw new CustomException("User ID is required", HttpStatus.BAD_REQUEST);
+    }
+
+    // Find cart by userId
+    Optional<CartModel> cartOpt = cartRepository.findByUserId(userId);
+
+    if (cartOpt.isEmpty()) {
+      return new ApiResponse<>(true, "No cart found to clear", null);
+    }
+
+    CartModel cart = cartOpt.get();
+    cartItemRepository.deleteAllByCartId(cart.getId());
+    return new ApiResponse<>(true, "Cart cleared successfully");
+  }
 }

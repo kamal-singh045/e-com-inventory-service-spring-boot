@@ -20,6 +20,7 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "8082:8082"
+      - "50052:50051"
     volumes:
       - ./:/workspace
       - ~/.m2:/root/.m2
@@ -28,6 +29,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DEVTOOLS_RESTART_ENABLED=true
       - SPRING_DATA_MONGODB_URI=mongodb://root:secret@inventory-mongo:27017/inventory_db?authSource=admin
+      - GRPC_SERVER_PORT=50051
     command: ["./mvnw", "spring-boot:run", "-Dspring-boot.run.fork=false"]
     depends_on:
       - inventory_mongo
