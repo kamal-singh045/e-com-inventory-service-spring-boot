@@ -26,6 +26,7 @@ public class InventoryGrpcService extends InventoryServiceGrpc.InventoryServiceI
   @Override
   public void getUserCart(GetUserCartRequest request, StreamObserver<GetUserCartResponse> responseObserver) {
     try {
+      log.info("Grpc connection is successful.....................");
       log.info("gRPC getUserCart called for userId: {}", request.getUserId());
       ApiResponse<Map<String, Object>> cartResponse = cartService.getCart(request.getUserId());
 
